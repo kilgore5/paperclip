@@ -397,6 +397,10 @@ module Paperclip
     end
 
     def extra_options_for(style) #:nodoc:
+      # -- ensure lambda is evaluated before accessing hash by styles
+      puts "FIXED VERSION: extra_options_for(style)... #{@options[:convert_options]}"
+      @options[:convert_options] = @options[:convert_options].respond_to?(:call) ? @options[:convert_options].call(self) : @options[:convert_options]
+      
       all_options   = @options[:convert_options][:all]
       all_options   = all_options.call(instance)   if all_options.respond_to?(:call)
       style_options = @options[:convert_options][style]
